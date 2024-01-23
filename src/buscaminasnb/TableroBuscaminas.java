@@ -9,7 +9,7 @@ public class TableroBuscaminas {
     int numFilas, numColumnas, numMinas, numCasillasAbiertas;
     private Consumer<List<Casilla>> eventoPartidaPerdida, eventoPartidaGanada;
     private Consumer<Casilla> eventoCasillaAbierta;
-    boolean juegoTerminado;
+    //boolean juegoTerminado;
 
     public TableroBuscaminas(int numFilas, int numColumnas, int numMinas) {
         this.numFilas = numFilas;
@@ -17,18 +17,18 @@ public class TableroBuscaminas {
         this.numMinas = numMinas;
         inicializarCasillas();
     }
+
     public void inicializarCasillas() {
         casillas = new Casilla[numFilas][numColumnas];
 
-        for (int i = 0; i < casillas.length; i++) {
-            for (int j = 0; j < casillas[i].length; j++) {
-                casillas[i][j] = new Casilla(i, j);
-                casillas[i][j].setPostFila(i);
-                casillas[i][j].setPosColumna(j);
-            }
+        for (int i = 0; i < casillas.length; i++) for (int j = 0; j < casillas[i].length; j++) {
+            casillas[i][j] = new Casilla(i, j);
+            casillas[i][j].setPostFila(i);
+            casillas[i][j].setPosColumna(j);
         }
         generarMinas();
     }
+
     private void generarMinas() {
         int minasGeneradas = 0;
 
@@ -43,32 +43,40 @@ public class TableroBuscaminas {
         }
         actualizarNumMinasAlrededor();
     }
+
     public void imprimirTablero() {
         for (int i = 0; i < casillas.length; i++) {
-            for (int j = 0; j <casillas[i].length; j++) System.out.print(casillas[i][j].isMina() ? "*" : "O");
+            for (int j = 0; j <casillas[i].length; j++) {
+                System.out.print(casillas[i][j].isMina() ? "*" : "O");
+            }
             System.out.print("\n");
         }
     }
+
     private void imprimirPistas() {
         for (int i = 0; i < casillas.length; i++) {
-            for (int j = 0; j <casillas[i].length; j++) System.out.print(casillas[i][j].getNumMinasAlrededor());
+            for (int j = 0; j < casillas[i].length; j++) {
+                System.out.print(casillas[i][j].getNumMinasAlrededor());
+            }
             System.out.print("\n");
         }
     }
+
     public void actualizarNumMinasAlrededor() {
         for(int i = 0; i <casillas.length; i++) for (int j = 0; j < casillas[i].length; j++) {
-                if (casillas[i][j].isMina()) {
-                    List<Casilla> casillasAlrededor = obtenerCasillasAlrededor(i, j);
-                    casillasAlrededor.forEach(casilla -> casilla.incrementarNumeroMinasAlrededor());
-                }
+            if (casillas[i][j].isMina()) {
+                List<Casilla> casillasAlrededor = obtenerCasillasAlrededor(i, j);
+                casillasAlrededor.forEach(casilla -> casilla.incrementarNumeroMinasAlrededor());
+            }
         }
     }
 
     private List<Casilla> obtenerCasillasAlrededor(int postFila, int postColumna) {
         List<Casilla> listaCasillas = new LinkedList<>();
+
         for (int i = 0; i < 8; i++) {
-            int fila = postFila;
-            int columna = postColumna;
+            int fila = postFila, columna = postColumna;
+
             switch (i) {
                 case 0: fila --; break; // Arriba
                 case 1: fila --; columna++; break; // Arriba derecha
@@ -90,28 +98,31 @@ public class TableroBuscaminas {
         List<Casilla> casillasConMinas = new LinkedList<>();
         for (int i = 0; i < casillas.length; i++) {
             for (int j = 0; j < casillas[i].length; j++) {
-                if(casillas[i][j].isMina()) casillasConMinas.add(casillas[i][j]);
+                if(casillas[i][j].isMina()) {
+                    casillasConMinas.add(casillas[i][j]);
+                }
             }
         }
         return casillasConMinas;
     }
+
     public void seleccionarCasilla(int posFila, int posColumna) {
         eventoCasillaAbierta.accept(this.casillas[posFila][posColumna]);
+
         if(this.casillas[posFila][posColumna].isMina()) {
             eventoPartidaPerdida.accept(obtenerCasillasConMinas());
-
-        } else if (this.casillas[posFila][posColumna].getNumMinasAlrededor() == 0) {
+        }
+        else if (this.casillas[posFila][posColumna].getNumMinasAlrededor() == 0) {
             marcarCasillaAbierta(posFila, posColumna);
             List<Casilla> casillasAlrededor = obtenerCasillasAlrededor(posFila, posColumna);
+
             for (Casilla casilla : casillasAlrededor) {
-                if(!casilla.isAbierta()) {
+                if (!casilla.isAbierta()) {
                     seleccionarCasilla(casilla.getPostFila(), casilla.getPosColumna());
                 }
             }
-
         } else {
             marcarCasillaAbierta(posFila, posColumna);
-
         }
         if(partidaGanada()) {
             eventoPartidaGanada.accept(obtenerCasillasConMinas());
@@ -136,11 +147,15 @@ public class TableroBuscaminas {
             this.casillas[posFila][posColumna].setAbierta(true);
         }
     }
+
+    public void setEventoPartidaGanada(Consumer<List<Casilla>> eventoPartidaGanada) {
+        this.eventoPartidaGanada = eventoPartidaGanada;
+    }
+
     public static void main(String[] args) {
         TableroBuscaminas tablero = new TableroBuscaminas(5, 5, 5);
         tablero.imprimirTablero();
         System.out.println("----------");
         tablero.imprimirPistas();
     }
-    public void setEventoPartidaGanada(Consumer<List<Casilla>> eventoPartidaGanada) { this.eventoPartidaGanada = eventoPartidaGanada; }
 }
