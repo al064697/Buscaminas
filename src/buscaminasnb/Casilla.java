@@ -9,26 +9,47 @@ public class Casilla {
         this.posColumna = posColumna;
     }
 
-    public int getPostFila() {return postFila;}
+    public int getPostFila() {
+        return postFila;
+    }
 
-    public void setPostFila(int postFila) {this.postFila = postFila;}
+    public void setPostFila(int postFila) {
+        this.postFila = postFila;
+    }
 
-    public int getPosColumna() {return posColumna;}
+    public int getPosColumna() {
+        return posColumna;
+    }
 
-    public void setPosColumna(int posColumna) {this.posColumna = posColumna;}
+    public void setPosColumna(int posColumna) {
+        this.posColumna = posColumna;
+    }
 
-    public boolean isMina() { return mina; }
+    public boolean isMina() {
+        return mina;
+    }
 
-    public void setMina(boolean mina) { this.mina = mina; }
+    public void setMina(boolean mina) {
+        this.mina = mina;
+    }
 
-    public int getNumMinasAlrededor() { return numMinasAlredeor; }
+    public int getNumMinasAlrededor() {
+        return numMinasAlredeor;
+    }
 
-    public void setnumMinasAlredeor(int numMinasAlredeor) { this.numMinasAlredeor = numMinasAlredeor; }
+    public void setnumMinasAlredeor(int numMinasAlredeor) {
+        this.numMinasAlredeor = numMinasAlredeor;
+    }
 
-    public void incrementarNumeroMinasAlrededor() { this.numMinasAlredeor++; }
+    public void incrementarNumeroMinasAlrededor() {
+        this.numMinasAlredeor++;
+    }
 
-    public boolean isAbierta() { return abierta; }
+    public boolean isAbierta() {
+        return abierta;
+    }
 
-    public void setAbierta(boolean abierta) { this.abierta = abierta; }
-
+    public void setAbierta(boolean abierta) {
+        this.abierta = abierta;
+    }
 }
